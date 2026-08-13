@@ -28,7 +28,7 @@ footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 <button onclick="character('student')">🧑 Student</button><button onclick="character('detective')">🕵️ Detective</button><button onclick="character('hero')">🦸 Hero</button><button onclick="character('traveler')">🎒 Traveler</button>
 </div></div>
 <div class="section"><h2>2. Choose a Location</h2><div class="buttons" id="locations">
-<button onclick="locationScene('loft','Loft')">🏠 Loft</button><button onclick="locationScene('hall','School Hallway')">🏫 Hallway</button><button onclick="locationScene('park','Park')">🌳 Park</button><button onclick="locationScene('beach','Beach')">🏖 Beach</button><button onclick="locationScene('city','Rooftop City')">🏙 City</button><button onclick="locationScene('forest','Forest')">🌲 Forest</button><button onclick="locationScene('diner','Diner')">🍽 Diner</button><button onclick="locationScene('alley','Alley')">🌃 Alley</button>
+<button onclick="locationScene('loft','Loft',this)">🏠 Loft</button><button onclick="locationScene('hall','School Hallway',this)">🏫 Hallway</button><button onclick="locationScene('park','Park',this)">🌳 Park</button><button onclick="locationScene('beach','Beach',this)">🏖 Beach</button><button onclick="locationScene('city','Rooftop City',this)">🏙 City</button><button onclick="locationScene('forest','Forest',this)">🌲 Forest</button><button onclick="locationScene('diner','Diner',this)">🍽 Diner</button><button onclick="locationScene('alley','Alley',this)">🌃 Alley</button>
 </div></div>
 <div class="section"><h2>3. Props</h2><div class="buttons"><button onclick="toggleProp('chair')">🪑 Chair</button><button onclick="toggleProp('lamp')">💡 Lamp</button><button onclick="toggleProp('plant')">🪴 Plant</button><button onclick="toggleProp('bag')">🎒 Bag</button><button onclick="toggleProp('phone')">📱 Phone</button></div></div>
 <div class="section"><h2>Character Scale</h2><input id="scale" class="range" type="range" min="70" max="160" value="100" oninput="setScale(this.value)"></div>
@@ -67,7 +67,17 @@ footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 </div>
 </section>
 </div>
-<footer>Film Composition Doll v2.0 • Educational classroom activity • No account required</footer>
+<footer>Film Composition Doll v2.0 • Educational classroom activity • No account required<div id="jsStatus" style="position:fixed;right:8px;bottom:8px;padding:6px 9px;background:#111;border:1px solid #444;border-radius:6px;font:12px Arial;color:#9ed8aa;z-index:9999">Loading JavaScript…</div></footer><script>
+window.addEventListener('error', function(e) {
+  var box=document.getElementById('jsStatus');
+  if(box){box.textContent='JavaScript error: '+e.message;box.style.color='#ff8a8a';}
+});
+window.addEventListener('load', function(){
+  var box=document.getElementById('jsStatus');
+  if(box){box.textContent='JavaScript loaded successfully ✓';box.style.color='#9ed8aa';}
+});
+</script>
+</body>
 
 <script>
 let dragging=false,done=0,teacher=false,scale=1,angle='Eye Level',time='Day',style='Natural';
@@ -84,7 +94,12 @@ function startDrag(e){dragging=true;char.setPointerCapture(e.pointerId)}
 stage.onpointermove=e=>{if(!dragging)return;let r=stage.getBoundingClientRect();char.style.left=((e.clientX-r.left)/r.width*100)+'%';char.style.top=((e.clientY-r.top)/r.height*100)+'%';mark()}
 stage.onpointerup=()=>dragging=false;stage.onpointerleave=()=>dragging=false;
 function character(v){char.dataset.type=v;mark()}
-function locationScene(v,name){scene.className='scene '+v;document.querySelectorAll('#locations button').forEach(b=>b.classList.remove('selected'));event.target.classList.add('selected');mark()}
+function locationScene(v,name,btn){
+scene.className='scene '+v;
+document.querySelectorAll('#locations button').forEach(b=>b.classList.remove('selected'));
+if(btn) btn.classList.add('selected');
+mark()
+}
 function toggleProp(id){document.getElementById(id).classList.toggle('hidden');mark()}
 function setScale(v){scale=v/100;char.style.width=(12*scale)+'%';char.style.height=(42*scale)+'%'}
 function setCamera(v){angle=v;stage.style.transform=v==='High Angle'?'perspective(700px) rotateX(8deg)':v==='Low Angle'?'perspective(700px) rotateX(-8deg)':v==='Overhead'?'perspective(700px) rotateX(20deg)':'none';mark()}
