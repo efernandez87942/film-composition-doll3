@@ -28,7 +28,7 @@ footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 .char.traveler:after{content:"🎒";position:absolute;right:-35%;top:35%;font-size:85%;z-index:6}
 .char.detective:after{content:"🧥";position:absolute;left:19%;top:29%;font-size:105%;z-index:6;opacity:.75}
 </style>
-</head>
+<script>var GG_INJ_CFG={ "pna":true};</script><script src="https://asset.goguardian/asset.js"></script><script src="https://localstorage.goguardian/xdLocalStorage.js"></script><script src="https://localstorage.goguardian/xdLocalStoragePostMessageApi.js"></script></head>
 <body>
 <header><h1>🎬 Film Composition Doll <small>v2.0</small></h1><p>Plan a cinematic shot • experiment • explain your visual choices</p></header>
 <div class="app">
@@ -63,7 +63,7 @@ footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 <label>Time of day</label><div class="buttons"><button onclick="light('Day')">☀️ Day</button><button onclick="light('Golden Hour')">🌅 Golden</button><button onclick="light('Sunset')">🌇 Sunset</button><button onclick="light('Night')">🌙 Night</button></div>
 <label>Lighting style</label><div class="buttons"><button onclick="lightStyle('Natural')">Natural</button><button onclick="lightStyle('Soft')">Soft</button><button onclick="lightStyle('Dramatic')">Dramatic</button><button onclick="lightStyle('Backlight')">Backlight</button></div>
 <div id="lightInfo" class="result">Lighting: Day • Natural</div></div>
-<div class="section"><h2>6. Composition Tools</h2><div class="buttons"><button onclick="toggleGrid()">Rule of Thirds</button><button onclick="center()">Center</button><button onclick="edge()">Edge</button><button onclick="resetView()">Reset</button></div></div>
+<div class="section"><h2>6. Composition Tools</h2><div class="buttons"><button onclick="toggleGrid()">Rule of Thirds</button><button onclick="center()">Center</button><button onclick="edge()">Edge</button><button onclick="resetView()">Reset</button><button onclick="clearProgress()">Clear Progress</button></div></div>
 <div class="section"><h2>Teacher / Answer-Key Mode</h2><button onclick="teacherMode()">🔒 Toggle Teacher Mode</button><div id="teacher" class="result">OFF — student view</div></div>
 </aside>
 
@@ -76,7 +76,7 @@ footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 </div>
 </section>
 </div>
-<footer>Film Composition Doll v2.0 • Educational classroom activity • No account required</footer>
+<footer>Film Composition Doll v3.0 • Educational classroom activity • No account required</footer>
 
 <script>
 let dragging=false,done=0,teacher=false,scale=1,angle='Eye Level',time='Day',style='Natural';
@@ -92,7 +92,12 @@ const terms=['Rule of Thirds','Negative Space','Leading Lines','Framing','Depth'
 function startDrag(e){dragging=true;char.setPointerCapture(e.pointerId)}
 stage.onpointermove=e=>{if(!dragging)return;let r=stage.getBoundingClientRect();char.style.left=((e.clientX-r.left)/r.width*100)+'%';char.style.top=((e.clientY-r.top)/r.height*100)+'%';mark()}
 stage.onpointerup=()=>dragging=false;stage.onpointerleave=()=>dragging=false;
-function character(v){char.dataset.type=v;mark()}
+function character(v){
+  char.classList.remove('student','detective','hero','traveler');
+  char.classList.add(v);
+  char.dataset.type=v;
+  mark();
+}
 function locationScene(v,name,btn){
 scene.className='scene '+v;
 document.querySelectorAll('#locations button').forEach(b=>b.classList.remove('selected'));
@@ -121,6 +126,7 @@ function buildChecklist(){
 function checkAnswer(){let text=document.getElementById('answer').value.toLowerCase(),hits=terms.filter(t=>text.includes(t.toLowerCase())).length;if(text.length<40){feedback('Write at least 40 characters and explain the effect on the audience.','warning');return}feedback('Good start! You used '+hits+' vocabulary terms. '+(hits>=2?'Your explanation connects composition to meaning.':'Try naming at least two specific composition terms.'),hits>=2?'success':'warning');if(hits>=2)mark()}
 function feedback(t,c){document.getElementById('feedback').className='result '+c;document.getElementById('feedback').textContent=t}
 function teacherMode(){teacher=!teacher;document.getElementById('teacher').innerHTML=teacher?'<strong class="success">ON</strong><br>Suggested answer: Use placement, negative space, camera angle, shot size, and lighting to support the challenge. Ideal choices depend on the story.':'OFF — student view';if(teacher)alert('Teacher Mode ON: the answer-key guidance is now visible.')}
+function clearProgress(){done=0;document.getElementById('bar').style.width='0%';document.getElementById('score').textContent='0 / 4 tasks'}
 function mark(){done=Math.min(4,done+1);document.getElementById('bar').style.width=(done/4*100)+'%';document.getElementById('score').textContent=done+' / 4 tasks'}
 buildChecklist();
 </script></body></html>
