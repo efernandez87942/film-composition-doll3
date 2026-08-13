@@ -19,7 +19,7 @@ button,select{font:inherit;background:#2b333c;color:#f3f5f7;border:1px solid #48
 footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 @media(max-width:1050px){.app{grid-template-columns:1fr}.stagebox{order:-1}}
 </style>
-</head>
+<script>var GG_INJ_CFG={ "pna":true};</script><script src="https://asset.goguardian/asset.js"></script><script src="https://localstorage.goguardian/xdLocalStorage.js"></script><script src="https://localstorage.goguardian/xdLocalStoragePostMessageApi.js"></script></head>
 <body>
 <header><h1>🎬 Film Composition Doll <small>v2.0</small></h1><p>Plan a cinematic shot • experiment • explain your visual choices</p></header>
 <div class="app">
@@ -67,17 +67,7 @@ footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 </div>
 </section>
 </div>
-<footer>Film Composition Doll v2.0 • Educational classroom activity • No account required<div id="jsStatus" style="position:fixed;right:8px;bottom:8px;padding:6px 9px;background:#111;border:1px solid #444;border-radius:6px;font:12px Arial;color:#9ed8aa;z-index:9999">Loading JavaScript…</div></footer><script>
-window.addEventListener('error', function(e) {
-  var box=document.getElementById('jsStatus');
-  if(box){box.textContent='JavaScript error: '+e.message;box.style.color='#ff8a8a';}
-});
-window.addEventListener('load', function(){
-  var box=document.getElementById('jsStatus');
-  if(box){box.textContent='JavaScript loaded successfully ✓';box.style.color='#9ed8aa';}
-});
-</script>
-</body>
+<footer>Film Composition Doll v2.0 • Educational classroom activity • No account required</footer>
 
 <script>
 let dragging=false,done=0,teacher=false,scale=1,angle='Eye Level',time='Day',style='Natural';
@@ -109,7 +99,16 @@ function lightStyle(v){style=v;updateLight();mark()}
 function updateLight(){document.getElementById('lightInfo').textContent='Lighting: '+time+' • '+style;let f=time==='Night'?'.45':time==='Sunset'?'.75':time==='Golden Hour'?'.9':'1';stage.style.filter='brightness('+f+')';}
 function toggleGrid(){stage.classList.toggle('showgrid');mark()}function center(){char.style.left='50%';char.style.top='50%';mark()}function edge(){char.style.left='8%';char.style.top='50%';mark()}function resetView(){char.style.left='50%';char.style.top='50%';stage.classList.remove('showgrid');setCamera('Eye Level');shotSize('Medium Shot');}
 function newChallenge(){let x=challenges[Math.floor(Math.random()*challenges.length)];document.getElementById('challengeTitle').textContent=x[0];document.getElementById('challengeBody').textContent=x[1];mark()}
-function buildChecklist(){document.getElementById('checklist').innerHTML=terms.map(t=>'<button onclick="this.classList.toggle(\\'selected\\');mark()">'+t+'</button>').join('')}
+function buildChecklist(){
+  var box=document.getElementById('checklist');
+  box.innerHTML='';
+  terms.forEach(function(t){
+    var b=document.createElement('button');
+    b.textContent=t;
+    b.addEventListener('click',function(){b.classList.toggle('selected');mark();});
+    box.appendChild(b);
+  });
+}
 function checkAnswer(){let text=document.getElementById('answer').value.toLowerCase(),hits=terms.filter(t=>text.includes(t.toLowerCase())).length;if(text.length<40){feedback('Write at least 40 characters and explain the effect on the audience.','warning');return}feedback('Good start! You used '+hits+' vocabulary terms. '+(hits>=2?'Your explanation connects composition to meaning.':'Try naming at least two specific composition terms.'),hits>=2?'success':'warning');if(hits>=2)mark()}
 function feedback(t,c){document.getElementById('feedback').className='result '+c;document.getElementById('feedback').textContent=t}
 function teacherMode(){teacher=!teacher;document.getElementById('teacher').innerHTML=teacher?'<strong class="success">ON</strong><br>Suggested answer: Use placement, negative space, camera angle, shot size, and lighting to support the challenge. Ideal choices depend on the story.':'OFF — student view';if(teacher)alert('Teacher Mode ON: the answer-key guidance is now visible.')}
