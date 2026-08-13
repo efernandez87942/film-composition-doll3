@@ -18,8 +18,17 @@ button,select{font:inherit;background:#2b333c;color:#f3f5f7;border:1px solid #48
 .progress{height:8px;background:#343b43;border-radius:10px;overflow:hidden}.progress div{height:100%;width:0;background:#62a8e5}
 footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
 @media(max-width:1050px){.app{grid-template-columns:1fr}.stagebox{order:-1}}
+
+.char.student .torso{background:#355c7d}.char.student .hair{background:#302a27}
+.char.detective .torso{background:#252a30}.char.detective .hair{background:#181818}
+.char.hero .torso{background:#8f2834}.char.hero .hair{background:#171717}
+.char.traveler .torso{background:#66724a}.char.traveler .hair{background:#6b4226}
+.char.detective:before{content:"🎩";position:absolute;left:8%;top:-20%;font-size:150%;z-index:6}
+.char.hero:before{content:"⚡";position:absolute;left:27%;top:18%;font-size:75%;z-index:7}
+.char.traveler:after{content:"🎒";position:absolute;right:-35%;top:35%;font-size:85%;z-index:6}
+.char.detective:after{content:"🧥";position:absolute;left:19%;top:29%;font-size:105%;z-index:6;opacity:.75}
 </style>
-<script>var GG_INJ_CFG={ "pna":true};</script><script src="https://asset.goguardian/asset.js"></script><script src="https://localstorage.goguardian/xdLocalStorage.js"></script><script src="https://localstorage.goguardian/xdLocalStoragePostMessageApi.js"></script></head>
+</head>
 <body>
 <header><h1>🎬 Film Composition Doll <small>v2.0</small></h1><p>Plan a cinematic shot • experiment • explain your visual choices</p></header>
 <div class="app">
