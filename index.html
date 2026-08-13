@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Film Composition Doll v2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#15191e;color:#eef2f5}
+header{padding:16px 20px;background:#0d1014;border-bottom:1px solid #343b43}h1{margin:0;font-size:26px}header p{margin:4px 0 0;color:#aeb8c2}
+.app{display:grid;grid-template-columns:285px minmax(420px,1fr) 310px;gap:12px;padding:12px;max-width:1550px;margin:auto}.panel{background:#20262d;border:1px solid #343c45;border-radius:10px;padding:12px}.panel h2{font-size:16px;margin:0 0 10px}.section{margin-bottom:14px}
+button,select{font:inherit;background:#2b333c;color:#f3f5f7;border:1px solid #48525c;border-radius:7px;padding:8px;cursor:pointer}button:hover{background:#35404a}.buttons{display:flex;flex-wrap:wrap;gap:6px}
+.selected{outline:2px solid #5ea6e8;background:#293d50}.small{font-size:12px;color:#aab4be}.stagebox{background:#0b0e11;padding:10px;border-radius:10px}.stage{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:#777;box-shadow:0 4px 20px #0008}
+.scene{position:absolute;inset:0}.scene.loft{background:linear-gradient(90deg,#35444d 0 27%,#765744 27% 100%)}.scene.hall{background:linear-gradient(90deg,#c2c8cd,#7e878e)}.scene.park{background:linear-gradient(#9cc7e1 0 55%,#6d9b62 55%)}.scene.beach{background:linear-gradient(#b7d7e8 0 52%,#5f9db8 52% 67%,#d9bd82 67%)}.scene.city{background:linear-gradient(#394c67 0 58%,#262c34 58%)}.scene.forest{background:linear-gradient(#49634a,#24372b)}.scene.diner{background:linear-gradient(#543e31,#241d1a)}.scene.alley{background:linear-gradient(90deg,#34343a,#77706a,#34343a)}
+.scene:after{content:"";position:absolute;inset:58% 0 0;background:repeating-linear-gradient(90deg,#0001 0 5%,transparent 5% 10%)}
+.grid{display:none;position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 32.9%,#fff8 33%,transparent 33.5%,transparent 66.2%,#fff8 66.5%,transparent 67%),linear-gradient(0deg,transparent 32.9%,#fff8 33%,transparent 33.5%,transparent 66.5%,#fff8 67%)}.showgrid .grid{display:block}
+.char{position:absolute;left:50%;top:50%;width:12%;height:42%;transform:translate(-50%,-50%);cursor:grab}.head{position:absolute;left:26%;top:0;width:48%;height:28%;border-radius:50%;background:#c88e6d}.hair{position:absolute;left:23%;top:-2%;width:54%;height:18%;border-radius:50% 50% 20% 20%;background:#302a27}.torso{position:absolute;left:18%;top:25%;width:64%;height:46%;border-radius:13px;background:#334f68}.arm{position:absolute;top:28%;width:14%;height:39%;border-radius:9px;background:#c88e6d}.a1{left:2%;transform:rotate(10deg)}.a2{right:2%;transform:rotate(-10deg)}.leg{position:absolute;top:67%;width:18%;height:37%;border-radius:8px;background:#202932}.l{left:27%}.r{right:27%}
+.prop{position:absolute;font-size:42px;cursor:pointer;z-index:3}.hidden{display:none}.controls label{display:block;font-size:12px;color:#b7c0c8;margin:7px 0 3px}.range{width:100%}.result{background:#171b20;border:1px solid #38414a;border-radius:7px;padding:9px;margin-top:8px;font-size:13px}
+.challenge{padding:10px;border:1px solid #45505a;border-radius:8px;background:#1a2026}.success{color:#9ed8aa}.warning{color:#ffd27a}textarea{width:100%;min-height:100px;resize:vertical;background:#15191e;color:#fff;border:1px solid #45505a;border-radius:7px;padding:9px;font:inherit}
+.progress{height:8px;background:#343b43;border-radius:10px;overflow:hidden}.progress div{height:100%;width:0;background:#62a8e5}
+footer{text-align:center;color:#77818b;padding:10px;font-size:12px}
+@media(max-width:1050px){.app{grid-template-columns:1fr}.stagebox{order:-1}}
+</style>
+</head>
+<body>
+<header><h1>🎬 Film Composition Doll <small>v2.0</small></h1><p>Plan a cinematic shot • experiment • explain your visual choices</p></header>
+<div class="app">
+<aside class="panel">
+<div class="section"><h2>1. Choose a Character</h2><div class="buttons" id="chars">
+<button onclick="character('student')">🧑 Student</button><button onclick="character('detective')">🕵️ Detective</button><button onclick="character('hero')">🦸 Hero</button><button onclick="character('traveler')">🎒 Traveler</button>
+</div></div>
+<div class="section"><h2>2. Choose a Location</h2><div class="buttons" id="locations">
+<button onclick="locationScene('loft','Loft')">🏠 Loft</button><button onclick="locationScene('hall','School Hallway')">🏫 Hallway</button><button onclick="locationScene('park','Park')">🌳 Park</button><button onclick="locationScene('beach','Beach')">🏖 Beach</button><button onclick="locationScene('city','Rooftop City')">🏙 City</button><button onclick="locationScene('forest','Forest')">🌲 Forest</button><button onclick="locationScene('diner','Diner')">🍽 Diner</button><button onclick="locationScene('alley','Alley')">🌃 Alley</button>
+</div></div>
+<div class="section"><h2>3. Props</h2><div class="buttons"><button onclick="toggleProp('chair')">🪑 Chair</button><button onclick="toggleProp('lamp')">💡 Lamp</button><button onclick="toggleProp('plant')">🪴 Plant</button><button onclick="toggleProp('bag')">🎒 Bag</button><button onclick="toggleProp('phone')">📱 Phone</button></div></div>
+<div class="section"><h2>Character Scale</h2><input id="scale" class="range" type="range" min="70" max="160" value="100" oninput="setScale(this.value)"></div>
+</aside>
+
+<main class="stagebox">
+<div id="stage" class="stage">
+<div id="scene" class="scene loft"></div>
+<div id="chair" class="prop" style="left:8%;top:55%">🪑</div><div id="lamp" class="prop" style="right:8%;top:22%">💡</div><div id="plant" class="prop" style="left:17%;top:20%">🪴</div><div id="bag" class="prop hidden" style="left:28%;top:67%">🎒</div><div id="phone" class="prop hidden" style="right:27%;top:62%">📱</div>
+<div id="char" class="char" onpointerdown="startDrag(event)"><div class="head"></div><div class="hair"></div><div class="torso"></div><div class="arm a1"></div><div class="arm a2"></div><div class="leg l"></div><div class="leg r"></div></div>
+<div class="grid"></div>
+</div>
+<p class="small">Drag the character. Try placing them on a third, in negative space, near an edge, or in the center.</p>
+</main>
+
+<aside class="panel controls">
+<div class="section"><h2>4. Camera & Shot</h2>
+<label>Camera angle</label><div class="buttons"><button onclick="setCamera('Eye Level')">Eye</button><button onclick="setCamera('High Angle')">High</button><button onclick="setCamera('Low Angle')">Low</button><button onclick="setCamera('Overhead')">Overhead</button></div>
+<label>Shot size</label><select id="shot" onchange="shotSize(this.value)"><option>Wide Shot</option><option>Medium Shot</option><option>Close-Up</option><option>Extreme Close-Up</option></select>
+<label>Camera movement</label><select id="movement"><option>Static</option><option>Pan</option><option>Tilt</option><option>Dolly In</option><option>Dolly Out</option></select>
+</div>
+<div class="section"><h2>5. Lighting & Mood</h2>
+<label>Time of day</label><div class="buttons"><button onclick="light('Day')">☀️ Day</button><button onclick="light('Golden Hour')">🌅 Golden</button><button onclick="light('Sunset')">🌇 Sunset</button><button onclick="light('Night')">🌙 Night</button></div>
+<label>Lighting style</label><div class="buttons"><button onclick="lightStyle('Natural')">Natural</button><button onclick="lightStyle('Soft')">Soft</button><button onclick="lightStyle('Dramatic')">Dramatic</button><button onclick="lightStyle('Backlight')">Backlight</button></div>
+<div id="lightInfo" class="result">Lighting: Day • Natural</div></div>
+<div class="section"><h2>6. Composition Tools</h2><div class="buttons"><button onclick="toggleGrid()">Rule of Thirds</button><button onclick="center()">Center</button><button onclick="edge()">Edge</button><button onclick="resetView()">Reset</button></div></div>
+<div class="section"><h2>Teacher / Answer-Key Mode</h2><button onclick="teacherMode()">🔒 Toggle Teacher Mode</button><div id="teacher" class="result">OFF — student view</div></div>
+</aside>
+
+<section class="panel" style="grid-column:1/-1">
+<div class="app2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+<div><h2>7. Composition Challenge</h2><div class="challenge"><strong id="challengeTitle">Show a character who feels lonely.</strong><p id="challengeBody">Use negative space, camera angle, and lighting to communicate isolation.</p><button onclick="newChallenge()">New Challenge</button></div>
+<h2 style="margin-top:14px">8. Composition Checklist</h2><div class="buttons" id="checklist"></div></div>
+<div><h2>9. Explain Your Shot</h2><p class="small">Use at least two film-composition terms. Explain how your choices affect the audience.</p><textarea id="answer" maxlength="700" placeholder="Example: I placed the character near the left third and left negative space on the right..."></textarea><button onclick="checkAnswer()" style="margin-top:7px">Check Explanation</button><div id="feedback" class="result">Your feedback will appear here.</div>
+<div style="margin-top:12px"><h2>Progress</h2><div class="progress"><div id="bar"></div></div><p id="score" class="small">0 / 4 tasks</p></div></div>
+</div>
+</section>
+</div>
+<footer>Film Composition Doll v2.0 • Educational classroom activity • No account required</footer>
+
+<script>
+let dragging=false,done=0,teacher=false,scale=1,angle='Eye Level',time='Day',style='Natural';
+const stage=document.getElementById('stage'),char=document.getElementById('char'),scene=document.getElementById('scene');
+const challenges=[
+['Show a character who feels lonely.','Use negative space, camera angle, and lighting to communicate isolation.'],
+['Make a character look powerful.','Try a low angle, larger scale, centered framing, and dramatic light.'],
+['Create a tense composition.','Push the subject toward an edge and use contrast or a Dutch-style visual imbalance.'],
+['Create a balanced composition.','Use symmetry, thirds, foreground/background, and carefully placed props.'],
+['Show a character who is hiding something.','Use framing, shadows, partial obstruction, or a close-up.']
+];
+const terms=['Rule of Thirds','Negative Space','Leading Lines','Framing','Depth','Headroom','Look Room','Balance','Camera Angle','Shot Size','Lighting'];
+function startDrag(e){dragging=true;char.setPointerCapture(e.pointerId)}
+stage.onpointermove=e=>{if(!dragging)return;let r=stage.getBoundingClientRect();char.style.left=((e.clientX-r.left)/r.width*100)+'%';char.style.top=((e.clientY-r.top)/r.height*100)+'%';mark()}
+stage.onpointerup=()=>dragging=false;stage.onpointerleave=()=>dragging=false;
+function character(v){char.dataset.type=v;mark()}
+function locationScene(v,name){scene.className='scene '+v;document.querySelectorAll('#locations button').forEach(b=>b.classList.remove('selected'));event.target.classList.add('selected');mark()}
+function toggleProp(id){document.getElementById(id).classList.toggle('hidden');mark()}
+function setScale(v){scale=v/100;char.style.width=(12*scale)+'%';char.style.height=(42*scale)+'%'}
+function setCamera(v){angle=v;stage.style.transform=v==='High Angle'?'perspective(700px) rotateX(8deg)':v==='Low Angle'?'perspective(700px) rotateX(-8deg)':v==='Overhead'?'perspective(700px) rotateX(20deg)':'none';mark()}
+function shotSize(v){char.style.width=v==='Wide Shot'?'8%':v==='Medium Shot'?'12%':v==='Close-Up'?'23%':'38%';char.style.height=v==='Wide Shot'?'28%':v==='Medium Shot'?'42%':v==='Close-Up'?'68%':'100%';mark()}
+function light(v){time=v;updateLight();mark()}
+function lightStyle(v){style=v;updateLight();mark()}
+function updateLight(){document.getElementById('lightInfo').textContent='Lighting: '+time+' • '+style;let f=time==='Night'?'.45':time==='Sunset'?'.75':time==='Golden Hour'?'.9':'1';stage.style.filter='brightness('+f+')';}
+function toggleGrid(){stage.classList.toggle('showgrid');mark()}function center(){char.style.left='50%';char.style.top='50%';mark()}function edge(){char.style.left='8%';char.style.top='50%';mark()}function resetView(){char.style.left='50%';char.style.top='50%';stage.classList.remove('showgrid');setCamera('Eye Level');shotSize('Medium Shot');}
+function newChallenge(){let x=challenges[Math.floor(Math.random()*challenges.length)];document.getElementById('challengeTitle').textContent=x[0];document.getElementById('challengeBody').textContent=x[1];mark()}
+function buildChecklist(){document.getElementById('checklist').innerHTML=terms.map(t=>'<button onclick="this.classList.toggle(\\'selected\\');mark()">'+t+'</button>').join('')}
+function checkAnswer(){let text=document.getElementById('answer').value.toLowerCase(),hits=terms.filter(t=>text.includes(t.toLowerCase())).length;if(text.length<40){feedback('Write at least 40 characters and explain the effect on the audience.','warning');return}feedback('Good start! You used '+hits+' vocabulary terms. '+(hits>=2?'Your explanation connects composition to meaning.':'Try naming at least two specific composition terms.'),hits>=2?'success':'warning');if(hits>=2)mark()}
+function feedback(t,c){document.getElementById('feedback').className='result '+c;document.getElementById('feedback').textContent=t}
+function teacherMode(){teacher=!teacher;document.getElementById('teacher').innerHTML=teacher?'<strong class="success">ON</strong><br>Suggested answer: Use placement, negative space, camera angle, shot size, and lighting to support the challenge. Ideal choices depend on the story.':'OFF — student view';if(teacher)alert('Teacher Mode ON: the answer-key guidance is now visible.')}
+function mark(){done=Math.min(4,done+1);document.getElementById('bar').style.width=(done/4*100)+'%';document.getElementById('score').textContent=done+' / 4 tasks'}
+buildChecklist();
+</script></body></html>
